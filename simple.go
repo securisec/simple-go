@@ -5,28 +5,24 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/google/uuid"
 )
 
 // GenerateRandomKey generate a random key in bytes
-func GenerateRandomKey(length int) []byte {
+func GenerateRandomKey(length int) ([]byte, error) {
 	k := make([]byte, length)
-	rand.Read(k)
-	return k
+	_, err := rand.Read(k)
+	return k, err
 }
 
 // GenerateRandomKeyHex generate random hex string key
-func GenerateRandomKeyHex(length int) string {
+func GenerateRandomKeyHex(length int) (string, error) {
 	k := make([]byte, length)
-	rand.Read(k)
-	return hex.EncodeToString(k)
-}
-
-// HexToBytes decode hex string to bytes
-func HexToBytes(s string) ([]byte, error) {
-	return hex.DecodeString(s)
+	_, err := rand.Read(k)
+	return hex.EncodeToString(k), err
 }
 
 // InSlice check if string in slice
@@ -55,4 +51,17 @@ func BadHTTPResponse(r *http.Response) error {
 		return fmt.Errorf("Bad response code: %d", r.StatusCode)
 	}
 	return nil
+}
+
+// Catch catch an error. If no out function is provided, it
+// defaults to log.Panic
+func Catch(err error, out ...func(s interface{})) error {
+	var f func(a ...interface{})
+	if err != nil {
+		if len(out) == 0 {
+			f = log.Panic
+		}
+		f(err)
+	}
+	return err
 }

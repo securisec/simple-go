@@ -10,8 +10,8 @@ import (
 	"github.com/mergermarket/go-pkcs7"
 )
 
-// EncryptGCM encrypt payload with AES GCM
-func EncryptGCM(key []byte, plaintext []byte) ([]byte, error) {
+// EncryptAESGCM encrypt payload with AES GCM
+func EncryptAESGCM(key []byte, plaintext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -45,8 +45,8 @@ func DecryptAESGCM(key []byte, enc []byte) ([]byte, error) {
 	return plaintext, err
 }
 
-// EncryptCBCPKCS7 encrypt payload with AES CBC
-func EncryptCBCPKCS7(key []byte, payload []byte) ([]byte, error) {
+// EncryptAESCBCPKCS7 encrypt payload with AES CBC
+func EncryptAESCBCPKCS7(key []byte, payload []byte) ([]byte, error) {
 	plainText, err := pkcs7.Pad(payload, aes.BlockSize)
 	if err != nil {
 		return nil, err
@@ -69,8 +69,8 @@ func EncryptCBCPKCS7(key []byte, payload []byte) ([]byte, error) {
 	return cipherText, nil
 }
 
-// DecryptCBCPKCS7 decrypt AES CBC with PKCS7 padding
-func DecryptCBCPKCS7(key []byte, ciphertext []byte) ([]byte, error) {
+// DecryptAESCBCPKCS7 decrypt AES CBC with PKCS7 padding
+func DecryptAESCBCPKCS7(key []byte, ciphertext []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
