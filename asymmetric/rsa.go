@@ -12,6 +12,15 @@ import (
 	"strings"
 )
 
+// GenerateKeyPair generate key pair
+func GenerateKeyPair(bitsize int) (*rsa.PrivateKey, *rsa.PublicKey, error) {
+	priv, err := GeneratePrivateKey(bitsize)
+	if err != nil {
+		return nil, nil, err
+	}
+	return priv, &priv.PublicKey, err
+}
+
 // GeneratePrivateKey generate a RSA private key
 func GeneratePrivateKey(bitSize int) (*rsa.PrivateKey, error) {
 	// Private Key generation
@@ -56,8 +65,8 @@ func GetRsaPKCS1PrivateFromStr(privateKeyStr []byte) (*rsa.PrivateKey, error) {
 
 // EncodePublicKeyToPKIXPEM convert public key to PEM format.
 // Will include PUBLIC KEY in the header
-func EncodePublicKeyToPKIXPEM(keyPair *rsa.PrivateKey) ([]byte, error) {
-	pubKeyBytes, err := x509.MarshalPKIXPublicKey(&keyPair.PublicKey)
+func EncodePublicKeyToPKIXPEM(pubkey *rsa.PublicKey) ([]byte, error) {
+	pubKeyBytes, err := x509.MarshalPKIXPublicKey(&pubkey)
 	if err != nil {
 		return nil, err
 	}
